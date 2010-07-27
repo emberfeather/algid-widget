@@ -1,5 +1,6 @@
 {
 	"applicationSingletons": {
+		"widgetParser": "plugins.widget.inc.resource.widget.widgetParser",
 	},
 	"applicationTransients": {
 	},
