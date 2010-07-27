@@ -13,7 +13,7 @@
 		<cfset var widget = '' />
 		
 		<!--- Detect the entire widget string --->
-		<cfset expression = '\[([a-zA-Z]+[a-zA-Z0-9-_]*):([a-zA-Z]+[a-zA-Z0-9-_]*)(.*?)[/]?\]|\[/\]' />
+		<cfset expression = '\[([a-zA-Z0-9]+[a-zA-Z0-9-_]*):([a-zA-Z]+[a-zA-Z0-9-_]*)(.*?)[/]?\]|\[/\]' />
 		
 		<!--- Parse for the proper syntaxs --->
 		<cfset locate = reFind(expression, arguments.input, 1, true) />
