@@ -19,9 +19,12 @@
 	public component function getWidget(required string pluginName, required string widgetName) {
 		var widget = '';
 		
-		// TODO Add caching
-		
-		widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.datasource, variables.transport);
+		// Make certain we are using an active widget
+		if(variables.transport.theApplication.managers.plugin.has(arguments.pluginName)) {
+			widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.datasource, variables.transport);
+		} else {
+			widget = variables.transport.theApplication.factories.transient.getWidget(variables.datasource, variables.transport);
+		}
 		
 		return widget;
 	}
@@ -45,7 +48,7 @@
 			
 			widget = getWidget(parsed[i].plugin, parsed[i].widget);
 			
-			// Process through the widget
+			// Process through the widgets
 			html = widget.process(arguments.path, html, parsed[i].args);
 			
 			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '') & html & right(modified, len(modified) - parsed[i].end + 1);

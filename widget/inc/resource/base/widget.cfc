@@ -33,7 +33,8 @@
 	</cffunction>
 <cfscript>
 	public string function process( required string path, required string content, required struct args ) {
-		throw('application', 'Missing Override', 'The process function needs to be overridden in the widget.');
+		// Base doesn't modify anything...
+		return arguments.content;
 	}
 </cfscript>
 </cfcomponent>
