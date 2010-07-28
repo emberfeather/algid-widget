@@ -26,17 +26,7 @@
 		return widget;
 	}
 	
-	public struct function parse(required string original, string path = '') {
-		var results = {};
-		
-		results['doCaching'] = true;
-		results['doCaching'] = false; // TODO remove
-		results['html'] = parseWidgets(arguments.original, arguments.path);
-		
-		return results;
-	}
-	
-	private string function parseWidgets(required string original, string path = '') {
+	public string function parse(required string original, string path = '') {
 		var modified = '';
 		var html = '';
 		var parsed = '';
@@ -51,7 +41,7 @@
 		parsed = variables.parser.parseTop(arguments.original);
 		
 		for( i = arrayLen(parsed); i gte 1; i--) {
-			html = parseWidgets(parsed[i].content);
+			html = parse(parsed[i].content, arguments.path);
 			
 			widget = getWidget(parsed[i].plugin, parsed[i].widget);
 			
