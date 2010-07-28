@@ -27,7 +27,7 @@
 				<cfset widget['start'] = locate.pos[1] />
 				<cfset widget['length'] = locate.len[1] />
 				<cfset widget['plugin'] = mid(input, locate.pos[2], locate.len[2]) />
-				<cfset widget['method'] = mid(input, locate.pos[3], locate.len[3]) />
+				<cfset widget['widget'] = mid(input, locate.pos[3], locate.len[3]) />
 				
 				<cfif locate.len[4]>
 					<cfset widget['args'] = deserializeJson('{' & mid(input, locate.pos[4], locate.len[4]) & '}') />

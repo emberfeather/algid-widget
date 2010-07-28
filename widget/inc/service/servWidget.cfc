@@ -1,0 +1,67 @@
+<cfcomponent extends="algid.inc.resource.base.service" output="false">
+<cfscript>
+	public component function init(required struct datasource, required struct transport) {
+		super.init(argumentcollection = arguments);
+		
+		variables.parser = variables.transport.theApplication.managers.singleton.getWidgetParser();
+		
+		return this;
+	}
+	
+	/* required path */
+	private string function cleanPath(string dirtyPath) {
+		var i18n = variables.transport.theApplication.managers.singleton.getI18N();
+		var path = variables.transport.theApplication.factories.transient.getModPathForWidget( i18n, variables.transport.theSession.managers.singleton.getSession().getLocale() );
+		
+		return path.cleanPath(arguments.dirtyPath);
+	}
+	
+	public component function getWidget(required string pluginName, required string widgetName) {
+		var widget = '';
+		
+		// TODO Add caching
+		
+		widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.datasource, variables.transport);
+		
+		return widget;
+	}
+	
+	public struct function parse(required string original, string path = '') {
+		var results = {};
+		
+		results['doCaching'] = true;
+		results['doCaching'] = false; // TODO remove
+		results['html'] = parseWidgets(arguments.original, arguments.path);
+		
+		return results;
+	}
+	
+	private string function parseWidgets(required string original, string path = '') {
+		var modified = '';
+		var html = '';
+		var parsed = '';
+		var i = '';
+		
+		if(trim(arguments.original) eq '') {
+			return '';
+		}
+		
+		modified = arguments.original;
+		
+		parsed = variables.parser.parseTop(arguments.original);
+		
+		for( i = arrayLen(parsed); i gte 1; i--) {
+			html = parseWidgets(parsed[i].content);
+			
+			widget = getWidget(parsed[i].plugin, parsed[i].widget);
+			
+			// Process through the widget
+			html = widget.process(arguments.path, html, parsed[i].args);
+			
+			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '') & html & right(modified, len(modified) - parsed[i].end + 1);
+		}
+		
+		return modified;
+	}
+</cfscript>
+</cfcomponent>
