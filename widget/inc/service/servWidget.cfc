@@ -10,8 +10,7 @@
 	
 	/* required path */
 	private string function cleanPath(string dirtyPath) {
-		var i18n = variables.transport.theApplication.managers.singleton.getI18N();
-		var path = variables.transport.theApplication.factories.transient.getModPathForWidget( i18n, variables.transport.theSession.managers.singleton.getSession().getLocale() );
+		var path = getModel('widget', 'path');
 		
 		return path.cleanPath(arguments.dirtyPath);
 	}
