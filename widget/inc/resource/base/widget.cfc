@@ -1,10 +1,10 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
 <cfscript>
-	public component function init(required struct datasource, required struct transport) {
+	public component function init(required struct transport) {
 		super.init();
 		
-		variables.datasource = arguments.datasource;
 		variables.transport = arguments.transport;
+		variables.services = variables.transport.theRequest.managers.singleton.getManagerService();
 		
 		return this;
 	}

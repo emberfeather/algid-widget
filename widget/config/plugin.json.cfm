@@ -3,8 +3,7 @@
 		"widgetParser": "plugins.widget.inc.resource.widget.widgetParser"
 	},
 	"applicationTransients": {
-		"widget": "plugins.widget.inc.resource.base.widget",
-		"servWidgetForWidget": "plugins.widget.inc.service.servWidget"
+		"widget": "plugins.widget.inc.resource.base.widget"
 	},
 	"i18n": {
 		"locales": [

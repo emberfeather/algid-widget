@@ -1,6 +1,6 @@
 <cfcomponent extends="algid.inc.resource.base.service" output="false">
 <cfscript>
-	public component function init(required struct datasource, required struct transport) {
+	public component function init(required struct transport) {
 		super.init(argumentcollection = arguments);
 		
 		variables.parser = variables.transport.theApplication.managers.singleton.getWidgetParser();
@@ -21,9 +21,9 @@
 		
 		// Make certain we are using an active widget
 		if(variables.transport.theApplication.managers.plugin.has(arguments.pluginName)) {
-			widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.datasource, variables.transport);
+			widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.transport);
 		} else {
-			widget = variables.transport.theApplication.factories.transient.getWidget(variables.datasource, variables.transport);
+			widget = variables.transport.theApplication.factories.transient.getWidget(variables.transport);
 		}
 		
 		return widget;
