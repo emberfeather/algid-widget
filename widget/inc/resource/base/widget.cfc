@@ -53,8 +53,10 @@
 	}
 	
 	public string function preventCaching() {
-		if(variables.transport.theRequest.managers.singleton.hasContent())
-			variables.transport.theRequest.managers.singleton.getContent().setDoCaching( false );
+		var observer = getPluginObserver('widget', 'widget');
+		
+		// After Read Event
+		observer.doPreventCaching(variables.transport);
 	}
 	
 	public string function process( required string path, required string content, required struct args ) {
