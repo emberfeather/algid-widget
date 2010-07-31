@@ -1,55 +1,55 @@
 component extends="mxunit.framework.TestCase" {
 	public void function beforeTests() {
 		variables.pluginTest = [
-			{
-				input = '[widget:test/]',
-				expected = {
-					args = {},
-					content = '',
-					method = 'test',
-					plugin = 'widget'
+				{
+					input = '[widget:test/]',
+					expected = {
+						args = {},
+						content = '',
+						method = 'test',
+						plugin = 'widget'
+					}
+				},
+				{
+					input = '[plugin1:testing][/]',
+					expected = {
+						args = {},
+						content = '',
+						method = 'testing',
+						plugin = 'plugin1'
+					}
+				},
+				{
+					input = '[plugin:method]something[/]',
+					expected = {
+						args = {},
+						content = 'something',
+						method = 'method',
+						plugin = 'plugin'
+					}
+				},
+				{
+					input = '[widget:test arg1:"value1", arg2:"value2"]Testing[/]',
+					expected = {
+						args = {
+							arg1 = 'value1',
+							arg2 = 'value2'
+						},
+						content = 'Testing',
+						method = 'test',
+						plugin = 'widget'
+					}
+				},
+				{
+					input = '[plugin:method][plugin:method]testing[/][/]',
+					expected = {
+						args = {},
+						content = '[plugin:method]testing[/]',
+						method = 'method',
+						plugin = 'plugin'
+					}
 				}
-			},
-			{
-				input = '[plugin1:testing][/]',
-				expected = {
-					args = {},
-					content = '',
-					method = 'testing',
-					plugin = 'plugin1'
-				}
-			},
-			{
-				input = '[plugin:method]something[/]',
-				expected = {
-					args = {},
-					content = 'something',
-					method = 'method',
-					plugin = 'plugin'
-				}
-			},
-			{
-				input = '[widget:test arg1:"value1", arg2:"value2"]Testing[/]',
-				expected = {
-					args = {
-						arg1 = 'value1',
-						arg2 = 'value2'
-					},
-					content = 'Testing',
-					method = 'test',
-					plugin = 'widget'
-				}
-			},
-			{
-				input = '[plugin:method][plugin:method]testing[/][/]',
-				expected = {
-					args = {},
-					content = '[plugin:method]testing[/]',
-					method = 'method',
-					plugin = 'plugin'
-				}
-			}
-		];
+			];
 	}
 	
 	public void function setup() {

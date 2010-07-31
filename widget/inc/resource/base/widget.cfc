@@ -8,6 +8,14 @@
 		
 		return this;
 	}
+	
+	public array function explodePath( required string path ) {
+		if(left(arguments.path, 1) == '/') {
+			arguments.path = right(arguments.path, len(arguments.path) - 1);
+		}
+		
+		return listToArray(arguments.path, '/');
+	}
 </cfscript>
 	<!---
 		Used to trigger a specific event on a plugin.
