@@ -52,6 +52,11 @@
 		return views.get(arguments.plugin, arguments.view);
 	}
 	
+	public string function preventCaching() {
+		if(variables.transport.theRequest.managers.singleton.hasContent())
+			variables.transport.theRequest.managers.singleton.getContent().setDoCaching( false );
+	}
+	
 	public string function process( required string path, required string content, required struct args ) {
 		// Base doesn't modify anything...
 		return arguments.content;
