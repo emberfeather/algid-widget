@@ -40,6 +40,18 @@
 		<cfreturn observer />
 	</cffunction>
 <cfscript>
+	public component function getService( required string plugin, required string service ) {
+		var services = variables.transport.theRequest.managers.singleton.getManagerService();
+		
+		return services.get(arguments.plugin, arguments.service);
+	}
+	
+	public component function getView( required string plugin, required string view ) {
+		var views = variables.transport.theRequest.managers.singleton.getManagerView();
+		
+		return views.get(arguments.plugin, arguments.view);
+	}
+	
 	public string function process( required string path, required string content, required struct args ) {
 		// Base doesn't modify anything...
 		return arguments.content;
