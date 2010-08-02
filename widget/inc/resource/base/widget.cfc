@@ -5,6 +5,7 @@
 		
 		variables.transport = arguments.transport;
 		variables.services = variables.transport.theRequest.managers.singleton.getManagerService();
+		variables.views = variables.transport.theRequest.managers.singleton.getManagerView();
 		
 		return this;
 	}
@@ -41,15 +42,11 @@
 	</cffunction>
 <cfscript>
 	public component function getService( required string plugin, required string service ) {
-		var services = variables.transport.theRequest.managers.singleton.getManagerService();
-		
-		return services.get(arguments.plugin, arguments.service);
+		return variables.services.get(arguments.plugin, arguments.service);
 	}
 	
 	public component function getView( required string plugin, required string view ) {
-		var views = variables.transport.theRequest.managers.singleton.getManagerView();
-		
-		return views.get(arguments.plugin, arguments.view);
+		return variables.views.get(arguments.plugin, arguments.view);
 	}
 	
 	public string function preventCaching() {
