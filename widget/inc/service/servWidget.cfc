@@ -50,7 +50,9 @@
 			// Process through the widgets
 			html = widget.process(arguments.path, html, parsed[i].args);
 			
-			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '') & html & right(modified, len(modified) - parsed[i].end + 1);
+			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '')
+				& html
+				& (parsed[i].end < len(modified) ? right(modified, len(modified) - parsed[i].end + 1) : '');
 		}
 		
 		return modified;
