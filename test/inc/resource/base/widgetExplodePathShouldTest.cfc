@@ -23,7 +23,15 @@ component extends="mxunit.framework.TestCase" {
 	}
 	
 	public void function setup() {
-		variables.widget = createObject('component', 'plugins.widget.inc.resource.base.widget').init(variables.i18n);
+		var transport = {
+			theRequest = {
+				managers = {
+					singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( false )
+				}
+			}
+		};
+		
+		variables.widget = createObject('component', 'plugins.widget.inc.resource.base.widget').init(transport);
 	}
 	
 	/**
