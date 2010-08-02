@@ -11,7 +11,7 @@
 	}
 	
 	public array function explodePath( required string path ) {
-		if(left(arguments.path, 1) == '/') {
+		if(left(arguments.path, 1) == '/' && len(arguments.path) gt 1) {
 			arguments.path = right(arguments.path, len(arguments.path) - 1);
 		}
 		
