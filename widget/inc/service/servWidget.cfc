@@ -42,6 +42,11 @@
 		
 		parsed = variables.parser.parseTop(arguments.original);
 		
+		// Don't proceed when no widgets exist in original string
+		if(!arrayLen(parsed)) {
+			return arguments.original;
+		}
+		
 		for( i = arrayLen(parsed); i gte 1; i--) {
 			html = parse(parsed[i].content, arguments.path);
 			
@@ -54,6 +59,9 @@
 				& html
 				& (parsed[i].end < len(modified) ? right(modified, len(modified) - parsed[i].end + 1) : '');
 		}
+		
+		// Run through again to parse the generated content in case it contains a widget
+		modified = parse(modified, arguments.path);
 		
 		return modified;
 	}
