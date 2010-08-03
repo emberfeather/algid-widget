@@ -10,6 +10,19 @@
 		return this;
 	}
 	
+	private string function addLevel(required string title, string navTitle = '', string link = '') {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		// After Read Event
+		observer.addLevel(variables.transport, arguments.title, arguments.navTitle, arguments.link);
+	}
+	
+	private string function cleanPath(required string dirtyPath) {
+		arguments.dirtyPath = reReplace(arguments.dirtyPath, '[/]*$', '', 'all');
+		
+		return arguments.dirtyPath;
+	}
+	
 	public array function explodePath( required string path ) {
 		if(left(arguments.path, 1) == '/' && len(arguments.path) gt 1) {
 			arguments.path = right(arguments.path, len(arguments.path) - 1);
@@ -41,26 +54,19 @@
 		<cfreturn observer />
 	</cffunction>
 <cfscript>
-	public component function getService( required string plugin, required string service ) {
+	private component function getService( required string plugin, required string service ) {
 		return variables.services.get(arguments.plugin, arguments.service);
 	}
 	
-	public component function getView( required string plugin, required string view ) {
+	private component function getView( required string plugin, required string view ) {
 		return variables.views.get(arguments.plugin, arguments.view);
 	}
 	
-	public string function preventCaching() {
+	private string function preventCaching() {
 		var observer = getPluginObserver('widget', 'widget');
 		
 		// After Read Event
 		observer.doPreventCaching(variables.transport);
-	}
-	
-	public string function addLevel(required string title, string navTitle = '', string link = '') {
-		var observer = getPluginObserver('widget', 'widget');
-		
-		// After Read Event
-		observer.addLevel(variables.transport, arguments.title, arguments.navTitle, arguments.link);
 	}
 	
 	public string function process( required string path, required string content, required struct args ) {
