@@ -56,6 +56,13 @@
 		observer.doPreventCaching(variables.transport);
 	}
 	
+	public string function addLevel(required string title, string navTitle = '', string link = '') {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		// After Read Event
+		observer.addLevel(variables.transport, arguments.title, arguments.navTitle, arguments.link);
+	}
+	
 	public string function process( required string path, required string content, required struct args ) {
 		// Base doesn't modify anything...
 		return arguments.content;
