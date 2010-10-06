@@ -8,8 +8,7 @@
 		return this;
 	}
 	
-	/* required path */
-	private string function cleanPath(string dirtyPath) {
+	private string function cleanPath(required string dirtyPath) {
 		var path = getModel('widget', 'path');
 		
 		return path.cleanPath(arguments.dirtyPath);
