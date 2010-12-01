@@ -12,6 +12,7 @@
 		]
 	},
 	"key": "widget",
+	"plugin": "Widget",
 	"prerequisites": {
 		"algid": "0.1.1"
 	},
