@@ -1,7 +1,9 @@
 {
 	"applicationSingletons": {
+		"widgetParser": "plugins.widget.inc.resource.widget.widgetParser"
 	},
 	"applicationTransients": {
+		"widget": "plugins.widget.inc.resource.base.widget"
 	},
 	"i18n": {
 		"locales": [
@@ -10,6 +12,7 @@
 		]
 	},
 	"key": "widget",
+	"plugin": "Widget",
 	"prerequisites": {
 		"algid": "0.1.1"
 	},
