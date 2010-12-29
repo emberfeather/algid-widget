@@ -14,7 +14,7 @@
 	"key": "widget",
 	"plugin": "Widget",
 	"prerequisites": {
-		"algid": "0.1.1"
+		"algid": "0.1.3"
 	},
 	"requestSingletons": {
 	},
