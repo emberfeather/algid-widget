@@ -6,6 +6,7 @@
 		variables.transport = arguments.transport;
 		variables.services = variables.transport.theRequest.managers.singleton.getManagerService();
 		variables.views = variables.transport.theRequest.managers.singleton.getManagerView();
+		variables.theUrl = variables.transport.theRequest.managers.singleton.getUrl();
 		
 		return this;
 	}
@@ -18,7 +19,7 @@
 	}
 	
 	private string function cleanPath(required string dirtyPath) {
-		return reReplace(arguments.dirtyPath, '[/]*$', '', 'all');
+		return reReplace(arguments.dirtyPath, '[/]*[\*]?$', '', 'all');
 	}
 	
 	public array function explodePath( required string path ) {
@@ -27,6 +28,14 @@
 		}
 		
 		return listToArray(arguments.path, '/');
+	}
+	
+	public string function getBasePath() {
+		return variables.basePath;
+	}
+	
+	public string function getPath() {
+		return variables.path;
 	}
 </cfscript>
 	<!---
@@ -52,6 +61,7 @@
 		<cfreturn observer />
 	</cffunction>
 <cfscript>
+	
 	private component function getService( required string plugin, required string service ) {
 		return variables.services.get(arguments.plugin, arguments.service);
 	}
@@ -67,9 +77,25 @@
 		observer.doPreventCaching(variables.transport);
 	}
 	
-	public string function process( required string path, required string content, required struct args ) {
+	public string function process( required string content, required struct args ) {
 		// Base doesn't modify anything...
 		return arguments.content;
+	}
+	
+	public void function setPath( required string path ) {
+		var pathLen = 0;
+		var basePathLen = 0;
+		
+		variables.path = cleanPath(arguments.path);
+		variables.basePath = cleanPath(variables.theUrl.search('_base'));
+		
+		pathLen = len(variables.path);
+		basePathLen = len(variables.basePath);
+		
+		// If there is a path that is set then it is not part of the base path
+		if(pathLen) {
+			variables.basePath = left(variables.basePath, basePathLen - pathLen);
+		}
 	}
 </cfscript>
 </cfcomponent>
