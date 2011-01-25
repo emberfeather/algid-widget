@@ -18,9 +18,7 @@
 	}
 	
 	private string function cleanPath(required string dirtyPath) {
-		arguments.dirtyPath = reReplace(arguments.dirtyPath, '[/]*$', '', 'all');
-		
-		return arguments.dirtyPath;
+		return reReplace(arguments.dirtyPath, '[/]*$', '', 'all');
 	}
 	
 	public array function explodePath( required string path ) {
