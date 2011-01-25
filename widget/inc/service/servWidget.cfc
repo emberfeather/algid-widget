@@ -51,8 +51,10 @@
 			
 			widget = getWidget(parsed[i].plugin, parsed[i].widget);
 			
+			widget.setPath(arguments.path);
+			
 			// Process through the widgets
-			html = widget.process(arguments.path, html, parsed[i].args);
+			html = widget.process(html, parsed[i].args);
 			
 			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '')
 				& html
