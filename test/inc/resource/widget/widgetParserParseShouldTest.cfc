@@ -1,72 +1,73 @@
 component extends="mxunit.framework.TestCase" {
 	public void function beforeTests() {
 		variables.pluginTest = [
-				{
-					input = '[widget:test/]',
-					expected = {
-						args = {},
-						content = '',
-						method = 'test',
-						plugin = 'widget'
-					}
-				},
-				{
-					input = '[plugin1:testing][/]',
-					expected = {
-						args = {},
-						content = '',
-						method = 'testing',
-						plugin = 'plugin1'
-					}
-				},
-				{
-					input = '[plugin:method]something[/]',
-					expected = {
-						args = {},
-						content = 'something',
-						method = 'method',
-						plugin = 'plugin'
-					}
-				},
-				{
-					input = '[widget:test arg1:"value1", arg2:"value2"]Testing[/]',
-					expected = {
-						args = {
-							arg1 = 'value1',
-							arg2 = 'value2'
-						},
-						content = 'Testing',
-						method = 'test',
-						plugin = 'widget'
-					}
-				},
-				{
-					input = '[plugin:method][plugin:method]testing[/][/]',
-					expected = {
-						args = {},
-						content = '[plugin:method]testing[/]',
-						method = 'method',
-						plugin = 'plugin'
-					}
+			{
+				input = '[widget:test/]',
+				expected = {
+					args = {},
+					content = '',
+					widget = 'test',
+					plugin = 'widget'
 				}
-			];
+			},
+			{
+				input = '[plugin1:testing][/]',
+				expected = {
+					args = {},
+					content = '',
+					widget = 'testing',
+					plugin = 'plugin1'
+				}
+			},
+			{
+				input = '[plugin:widget]something[/]',
+				expected = {
+					args = {},
+					content = 'something',
+					widget = 'widget',
+					plugin = 'plugin'
+				}
+			},
+			{
+				input = '[widget:test arg1:"value1", arg2:"value2"]Testing[/]',
+				expected = {
+					args = {
+						arg1 = 'value1',
+						arg2 = 'value2'
+					},
+					content = 'Testing',
+					widget = 'test',
+					plugin = 'widget'
+				}
+			},
+			{
+				input = '[plugin:widget][plugin:widget]testing[/][/]',
+				expected = {
+					args = {},
+					content = '[plugin:widget]testing[/]',
+					widget = 'widget',
+					plugin = 'plugin'
+				}
+			}
+		];
 	}
 	
 	public void function setup() {
 		variables.parser = createObject('component', 'plugins.widget.inc.resource.widget.widgetParser').init();
 	}
 	
-	/**
-	 * @mxunit:dataprovider variables.pluginTest
-	 */
-	public void function testReturnPluginAndMethod(item) {
-		var results = '';
-		
-		//results = variables.parser.parse(arguments.item.input);
-		
-		//assertEquals(arguments.item.expected.plugin, results[1].plugin, 'Plugin was not correctly identified');
-		//assertEquals(arguments.item.expected.method, results[1].method, 'Method was not correctly identified');
-		//assertEquals(arguments.item.expected.args, results[1].args, 'Arguments were not correctly identified');
-		//assertEquals(arguments.item.expected.content, results[1].content, 'Content was not correctly identified');
+	public void function testReturnPluginAndMethod() {
+		for( local.i = 1; local.i <= arrayLen(variables.pluginTest); local.i ++) {
+			local.item = variables.pluginTest[local.i];
+			
+			local.results = variables.parser.parse(local.item.input);
+			
+			debug(local.results);
+			
+			assertEquals(local.item.expected.plugin, local.results[1].plugin, 'Plugin was not correctly identified');
+			assertEquals(local.item.expected.widget, local.results[1].widget, 'Widget was not correctly identified');
+			assertEquals(local.item.expected.args, local.results[1].args, 'Arguments were not correctly identified');
+			assertEquals(local.item.expected.content, local.results[1].content, 'Content was not correctly identified');
+		}
 	}
 }
