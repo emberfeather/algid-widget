@@ -15,16 +15,14 @@
 	}
 	
 	public component function getWidget(required string pluginName, required string widgetName) {
-		var widget = '';
-		
 		// Make certain we are using an active widget
 		if(variables.transport.theApplication.managers.plugin.has(arguments.pluginName)) {
-			widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.transport);
+			local.widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.transport);
 		} else {
-			widget = variables.transport.theApplication.factories.transient.getWidget(variables.transport);
+			local.widget = variables.transport.theApplication.factories.transient.getWidget(variables.transport);
 		}
 		
-		return widget;
+		return local.widget;
 	}
 	
 	public string function parse(required string original, string path = '') {
