@@ -1,5 +1,4 @@
-<cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
-<cfscript>
+component extends="cf-compendium.inc.resource.base.base" {
 	public component function init(required struct transport) {
 		super.init();
 		
@@ -37,30 +36,27 @@
 	public string function getPath() {
 		return variables.path;
 	}
-</cfscript>
-	<!---
-		Used to trigger a specific event on a plugin.
-	--->
-	<cffunction name="getPluginObserver" access="public" returntype="component" output="false">
-		<cfargument name="plugin" type="string" required="true" />
-		<cfargument name="observer" type="string" required="true" />
+	
+	/**
+	 * Used to trigger a specific event on a plugin.
+	 */
+	public component function getPluginObserver(required string plugin, required string observer) {
 		
-		<cfset var plugin = '' />
-		<cfset var observerManager = '' />
-		<cfset var observer = '' />
+		var plugin = '';
+		var observerManager = '';
+		var observer = '';
 		
-		<!--- Get the plugin singleton --->
-		<cfinvoke component="#variables.transport.theApplication.managers.plugin#" method="get#arguments.plugin#" returnvariable="plugin" />
+		// Get the plugin singleton
+		plugin = variables.transport.theApplication.managers.plugin['get' & arguments.plugin]();
 		
-		<!--- Get the observer manager for the plugin --->
-		<cfset observerManager = plugin.getObserver() />
+		// Get the observer manager for the plugin
+		observerManager = plugin.getObserver();
 		
-		<!--- Get the specific observer --->
-		<cfinvoke component="#observerManager#" method="get#arguments.observer#" returnvariable="observer" />
+		// Get the specific observer
+		observer = observerManager['get' & arguments.observer]();
 		
-		<cfreturn observer />
-	</cffunction>
-<cfscript>
+		return observer;
+	}
 	
 	private component function getService( required string plugin, required string service ) {
 		return variables.services.get(arguments.plugin, arguments.service);
@@ -97,5 +93,4 @@
 			variables.basePath = left(variables.basePath, basePathLen - pathLen);
 		}
 	}
-</cfscript>
-</cfcomponent>
+}
