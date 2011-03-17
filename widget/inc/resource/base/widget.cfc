@@ -1,5 +1,4 @@
-<cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
-<cfscript>
+component extends="cf-compendium.inc.resource.base.base" {
 	public component function init(required struct transport) {
 		super.init();
 		
@@ -14,8 +13,19 @@
 	private string function addLevel(required string title, string navTitle = '', string link = '') {
 		var observer = getPluginObserver('widget', 'widget');
 		
-		// After Read Event
 		observer.addLevel(variables.transport, arguments.title, arguments.navTitle, arguments.link);
+	}
+	
+	private string function addScript(required string script, struct fallback = {}) {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		observer.addScript(variables.transport, arguments.script, arguments.fallback);
+	}
+	
+	private string function addStyle(required string href, string media = 'all') {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		observer.addStyle(variables.transport, arguments.href, arguments.media);
 	}
 	
 	private string function cleanPath(required string dirtyPath) {
@@ -37,30 +47,26 @@
 	public string function getPath() {
 		return variables.path;
 	}
-</cfscript>
-	<!---
-		Used to trigger a specific event on a plugin.
-	--->
-	<cffunction name="getPluginObserver" access="public" returntype="component" output="false">
-		<cfargument name="plugin" type="string" required="true" />
-		<cfargument name="observer" type="string" required="true" />
+	
+	/**
+	 * Used to trigger a specific event on a plugin.
+	 */
+	public component function getPluginObserver(required string plugin, required string observer) {
+		var plugin = '';
+		var observerManager = '';
+		var observer = '';
 		
-		<cfset var plugin = '' />
-		<cfset var observerManager = '' />
-		<cfset var observer = '' />
+		// Get the plugin singleton
+		plugin = variables.transport.theApplication.managers.plugin['get' & arguments.plugin]();
 		
-		<!--- Get the plugin singleton --->
-		<cfinvoke component="#variables.transport.theApplication.managers.plugin#" method="get#arguments.plugin#" returnvariable="plugin" />
+		// Get the observer manager for the plugin
+		observerManager = plugin.getObserver();
 		
-		<!--- Get the observer manager for the plugin --->
-		<cfset observerManager = plugin.getObserver() />
+		// Get the specific observer
+		observer = observerManager['get' & arguments.observer]();
 		
-		<!--- Get the specific observer --->
-		<cfinvoke component="#observerManager#" method="get#arguments.observer#" returnvariable="observer" />
-		
-		<cfreturn observer />
-	</cffunction>
-<cfscript>
+		return observer;
+	}
 	
 	private component function getService( required string plugin, required string service ) {
 		return variables.services.get(arguments.plugin, arguments.service);
@@ -73,7 +79,6 @@
 	private string function preventCaching() {
 		var observer = getPluginObserver('widget', 'widget');
 		
-		// After Read Event
 		observer.doPreventCaching(variables.transport);
 	}
 	
@@ -97,5 +102,4 @@
 			variables.basePath = left(variables.basePath, basePathLen - pathLen);
 		}
 	}
-</cfscript>
-</cfcomponent>
+}
