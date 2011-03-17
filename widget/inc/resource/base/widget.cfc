@@ -13,8 +13,19 @@ component extends="cf-compendium.inc.resource.base.base" {
 	private string function addLevel(required string title, string navTitle = '', string link = '') {
 		var observer = getPluginObserver('widget', 'widget');
 		
-		// After Read Event
 		observer.addLevel(variables.transport, arguments.title, arguments.navTitle, arguments.link);
+	}
+	
+	private string function addScript(required string script, struct fallback = {}) {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		observer.addScript(variables.transport, arguments.script, arguments.fallback);
+	}
+	
+	private string function addStyle(required string href, string media = 'all') {
+		var observer = getPluginObserver('widget', 'widget');
+		
+		observer.addStyle(variables.transport, arguments.href, arguments.media);
 	}
 	
 	private string function cleanPath(required string dirtyPath) {
@@ -41,7 +52,6 @@ component extends="cf-compendium.inc.resource.base.base" {
 	 * Used to trigger a specific event on a plugin.
 	 */
 	public component function getPluginObserver(required string plugin, required string observer) {
-		
 		var plugin = '';
 		var observerManager = '';
 		var observer = '';
@@ -69,7 +79,6 @@ component extends="cf-compendium.inc.resource.base.base" {
 	private string function preventCaching() {
 		var observer = getPluginObserver('widget', 'widget');
 		
-		// After Read Event
 		observer.doPreventCaching(variables.transport);
 	}
 	
