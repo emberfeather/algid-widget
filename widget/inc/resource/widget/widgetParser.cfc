@@ -31,6 +31,13 @@
 				
 				<cfif locate.len[4]>
 					<cfset widget['args'] = deserializeJson('{' & mid(input, locate.pos[4], locate.len[4]) & '}') />
+					
+					<!--- Convert json values into native equivalents --->
+					<cfloop list="#structKeyList(widget['args'])#" index="i">
+						<cfif isJson(widget['args'][i])>
+							<cfset widget['args'][i] = deserializeJson(widget['args'][i]) />
+						</cfif>
+					</cfloop>
 				<cfelse>
 					<cfset widget['args'] = {} />
 				</cfif>
