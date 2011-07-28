@@ -15,6 +15,8 @@
 	}
 	
 	public component function getWidget(required string pluginName, required string widgetName) {
+		arguments.widgetName = ucase(left(arguments.widgetName, 1)) & right(arguments.widgetName, len(arguments.widgetName) - 1);
+		
 		// Make certain we are using an active widget
 		if(variables.transport.theApplication.managers.plugin.has(arguments.pluginName)) {
 			local.widget = createObject('component', 'plugins.' & arguments.pluginName & '.extend.widget.widget.wdgt' & arguments.widgetName).init(variables.transport);
