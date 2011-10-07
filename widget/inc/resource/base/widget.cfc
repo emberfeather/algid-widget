@@ -6,6 +6,7 @@ component extends="cf-compendium.inc.resource.base.base" {
 		variables.services = variables.transport.theRequest.managers.singleton.getManagerService();
 		variables.views = variables.transport.theRequest.managers.singleton.getManagerView();
 		variables.theUrl = variables.transport.theRequest.managers.singleton.getUrl();
+		variables.continueProcessing = true;
 		
 		return this;
 	}
@@ -76,10 +77,18 @@ component extends="cf-compendium.inc.resource.base.base" {
 		return variables.views.get(arguments.plugin, arguments.view);
 	}
 	
+	public string function keepProcessing() {
+		return variables.continueProcessing;
+	}
+	
 	private string function preventCaching() {
 		var observer = getPluginObserver('widget', 'widget');
 		
 		observer.doPreventCaching(variables.transport);
+	}
+	
+	private string function preventProcessing() {
+		variables.continueProcessing = false;
 	}
 	
 	public string function process( required string content, required struct args ) {

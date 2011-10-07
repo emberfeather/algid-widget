@@ -27,11 +27,15 @@
 		return local.widget;
 	}
 	
-	public string function parse(required string original, string path = '') {
+	public string function parse(required string original, string path = '', struct options = {}) {
 		var modified = '';
 		var html = '';
 		var parsed = '';
 		var i = '';
+		
+		if(!structKeyExists(arguments.options, 'processWidgets')) {
+			arguments.options.processWidgets = true;
+		}
 		
 		if(trim(arguments.original) eq '') {
 			return '';
@@ -49,20 +53,30 @@
 		for( i = arrayLen(parsed); i gte 1; i--) {
 			html = parse(parsed[i].content, arguments.path);
 			
-			widget = getWidget(parsed[i].plugin, parsed[i].widget);
-			
-			widget.setPath(arguments.path);
-			
-			// Process through the widgets
-			html = widget[parsed[i].method](html, parsed[i].args);
-			
-			modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '')
-				& html
-				& (parsed[i].end < len(modified) ? right(modified, len(modified) - parsed[i].end + 1) : '');
+			if(arguments.options.processWidgets) {
+				local.widget = getWidget(parsed[i].plugin, parsed[i].widget);
+				
+				local.widget.setPath(arguments.path);
+				
+				// Process through the widgets
+				html = local.widget[parsed[i].method](html, parsed[i].args);
+				
+				modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '')
+					& html
+					& (parsed[i].end < len(modified) ? right(modified, len(modified) - parsed[i].end + 1) : '');
+				
+				if(!local.widget.keepProcessing()) {
+					arguments.options.processWidgets = false;
+				}
+			} else {
+				// Not processing the parsed widget, just removing.
+				modified = (parsed[i].start > 1 ? left(modified, parsed[i].start - 1) : '')
+					& (parsed[i].end < len(modified) ? right(modified, len(modified) - parsed[i].end + 1) : '');
+			}
 		}
 		
 		// Run through again to parse the generated content in case it contains a widget
-		modified = parse(modified, arguments.path);
+		modified = parse(modified, arguments.path, arguments.options);
 		
 		return modified;
 	}
