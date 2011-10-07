@@ -13,7 +13,7 @@
 		<cfset var widget = '' />
 		
 		<!--- Detect the entire widget string --->
-		<cfset expression = '\[([a-zA-Z0-9]+[a-zA-Z0-9-_]*):([a-zA-Z]+[a-zA-Z0-9-_]*)(.*?)[/]?\]|\[/\]' />
+		<cfset expression = '\[([a-zA-Z0-9]+[a-zA-Z0-9-_]*):([a-zA-Z]+[a-zA-Z0-9-_]*)(:([a-zA-Z]+[a-zA-Z0-9-_]*))?(.*?)[/]?\]|\[/\]' />
 		
 		<!--- Parse for the proper syntaxs --->
 		<cfset locate = reFind(expression, arguments.input, 1, true) />
@@ -28,9 +28,10 @@
 				<cfset widget['length'] = locate.len[1] />
 				<cfset widget['plugin'] = mid(input, locate.pos[2], locate.len[2]) />
 				<cfset widget['widget'] = mid(input, locate.pos[3], locate.len[3]) />
+				<cfset widget['method'] = locate.len[5] ? mid(input, locate.pos[5], locate.len[5]) : 'process' />
 				
-				<cfif locate.len[4]>
-					<cfset widget['args'] = deserializeJson('{' & mid(input, locate.pos[4], locate.len[4]) & '}') />
+				<cfif locate.len[6]>
+					<cfset widget['args'] = deserializeJson('{' & mid(input, locate.pos[6], locate.len[6]) & '}') />
 					
 					<!--- Convert json values into native equivalents --->
 					<cfloop list="#structKeyList(widget['args'])#" index="i">

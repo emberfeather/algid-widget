@@ -1,11 +1,26 @@
 component extends="cf-compendium.inc.resource.base.base" {
-	public component function init(required struct transport) {
+	public component function init(required struct transport, required string path) {
 		super.init();
 		
 		variables.transport = arguments.transport;
 		variables.services = variables.transport.theRequest.managers.singleton.getManagerService();
 		variables.views = variables.transport.theRequest.managers.singleton.getManagerView();
 		variables.theUrl = variables.transport.theRequest.managers.singleton.getUrl();
+		variables.settings = {
+			continueProcessing = true,
+			replaceContent = false
+		};
+		
+		variables.path = cleanPath(arguments.path);
+		variables.basePath = cleanPath(variables.theUrl.search('_base'));
+		
+		local.pathLen = len(variables.path);
+		local.basePathLen = len(variables.basePath);
+		
+		// If there is a path that is set then it is not part of the base path
+		if(local.pathLen) {
+			variables.basePath = left(variables.basePath, local.basePathLen - local.pathLen);
+		}
 		
 		return this;
 	}
@@ -32,7 +47,7 @@ component extends="cf-compendium.inc.resource.base.base" {
 		return reReplace(arguments.dirtyPath, '[/]*[\*]?$', '', 'all');
 	}
 	
-	public array function explodePath( required string path ) {
+	private array function explodePath( required string path ) {
 		if(left(arguments.path, 1) == '/' && len(arguments.path) gt 1) {
 			arguments.path = right(arguments.path, len(arguments.path) - 1);
 		}
@@ -40,18 +55,18 @@ component extends="cf-compendium.inc.resource.base.base" {
 		return listToArray(arguments.path, '/');
 	}
 	
-	public string function getBasePath() {
+	private string function getBasePath() {
 		return variables.basePath;
 	}
 	
-	public string function getPath() {
+	private string function getPath() {
 		return variables.path;
 	}
 	
 	/**
 	 * Used to trigger a specific event on a plugin.
 	 */
-	public component function getPluginObserver(required string plugin, required string observer) {
+	private component function getPluginObserver(required string plugin, required string observer) {
 		var plugin = '';
 		var observerManager = '';
 		var observer = '';
@@ -76,30 +91,22 @@ component extends="cf-compendium.inc.resource.base.base" {
 		return variables.views.get(arguments.plugin, arguments.view);
 	}
 	
+	public string function getSetting(required string setting) {
+		return variables.settings[arguments.setting];
+	}
+	
 	private string function preventCaching() {
 		var observer = getPluginObserver('widget', 'widget');
 		
 		observer.doPreventCaching(variables.transport);
 	}
 	
+	private string function setSetting(required string setting, required any value) {
+		variables.settings[arguments.setting] = arguments.value;
+	}
+	
 	public string function process( required string content, required struct args ) {
 		// Base doesn't modify anything...
 		return arguments.content;
-	}
-	
-	public void function setPath( required string path ) {
-		var pathLen = 0;
-		var basePathLen = 0;
-		
-		variables.path = cleanPath(arguments.path);
-		variables.basePath = cleanPath(variables.theUrl.search('_base'));
-		
-		pathLen = len(variables.path);
-		basePathLen = len(variables.basePath);
-		
-		// If there is a path that is set then it is not part of the base path
-		if(pathLen) {
-			variables.basePath = left(variables.basePath, basePathLen - pathLen);
-		}
 	}
 }
